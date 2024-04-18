@@ -1,150 +1,155 @@
-
+import init.wifi.rc
 # import /init.storage.rc // for samsung
 
-# add for board-relative touch screen driver for
-# alarm mode and normal mode.
+on early-boot
+    chmod 660 /proc/cpgge/cp_crash
+    chmod 660 /proc/cpgge/wdtirq
+    chmod 660 /proc/cpgge/stop
+    chmod 660 /proc/cpgge/start
+    chmod 660 /proc/cpgge/modem
+    chmod 660 /proc/cpgge/dsp
+
+    chown system root /proc/cpgge/cp_crash
+    chown system root /proc/cpgge/wdtirq
+    chown system root /proc/cpgge/stop
+    chown system root /proc/cpgge/start
+    chown system root /proc/cpgge/modem
+    chown system root /proc/cpgge/dsp
+
+    chmod 660 /proc/cptl/cp_crash
+    chmod 660 /proc/cptl/wdtirq
+    chmod 660 /proc/cptl/stop
+    chmod 660 /proc/cptl/start
+    chmod 660 /proc/cptl/modem
+    chmod 660 /proc/cptl/tgdsp
+    chmod 660 /proc/cptl/ldsp
+    chmod 660 /proc/cptl/warm
+    chmod 660 /proc/cptl/fixnv
+    chmod 660 /proc/cptl/runnv
+
+    chown system root /proc/cptl/cp_crash
+    chown system root /proc/cptl/wdtirq
+    chown system root /proc/cptl/stop
+    chown system root /proc/cptl/start
+    chown system root /proc/cptl/modem
+    chown system root /proc/cptl/ldsp
+    chown system root /proc/cptl/tgdsp
+    chown system root /proc/cptl/warm
+    chown system root /proc/cptl/fixnv
+    chown system root /proc/cptl/runnv
 
 on boot
-
-    write /sys/class/gpio/export 167
-    write /sys/class/gpio/gpio167/direction out
-    write /sys/class/gpio/gpio167/value 1
-    write /sys/class/gpio/export 168
-    write /sys/class/gpio/gpio168/direction out
-    chown root system /sys/class/gpio/gpio167/value
-    chmod 0664 /sys/class/gpio/gpio167/value
-    chown root system /sys/class/gpio/gpio168/value
-    chmod 0664 /sys/class/gpio/gpio168/value
-    chown system system /sys/class/switch/sprd_simdet/state
-
-#To allow interfaces to get v6 address when tethering is enabled
-     write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
-     write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
-     write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
+# SSWAP
+    write /proc/sys/vm/swappiness 130
 
 # bluetooth
-    # UART0 device
     chmod 660 /dev/ttyS0
-    chown bluetooth net_bt_stack /dev/ttyS0
-
     chmod 660 /proc/bluetooth/sleep/proto
     chmod 660 /sys/class/rfkill/rfkill0/state
     chmod 660 /sys/class/rfkill/rfkill0/type
-    chmod 660 /sys/devices/platform/sprd_wcn.0/pa_enable
+    chmod 660 /proc/bluetooth/sleep/btwrite
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth system /proc/bluetooth/sleep/proto
-    chmod 660 /proc/bluetooth/sleep/btwrite
-    chmod 660 /proc/bluetooth/sleep/lpm
-    chown bluetooth net_bt_stack /sys/devices/platform/sprd_wcn.0/pa_enable
-    chown bluetooth system /proc/bluetooth/sleep/btwrite
-    chown bluetooth system /proc/bluetooth/sleep/lpm
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
-    mkdir /data/system 0770 system system
-    mkdir /etc/wifi 0770 wifi wifi
-    write /data/misc/wifi/fwpath sta_mode
-    chmod 660 /data/misc/wifi/fwpath
-    chown wifi wifi /data/misc/wifi/fwpath
-    rmdir /data/system/wpa_supplicant
-    mkdir /data/misc/dhcp 0775 dhcp dhcp
-    chown dhcp dhcp /data/misc/dhcp
-    setprop wifi.interface wlan0
+    chown bluetooth net_bt_stack /dev/ttyS0
 
-    mkdir /data/cg/ 0770 system system
-    mkdir /data/cg/online 0770 system system
-    mkdir /data/cg/supl 0770 system system
-    chmod 660 /dev/ttyV1
-    chmod 660 /dev/ttyV0
-    chmod 777 /system/etc/HiMap.db
+#for Bluesleep
+        chown bluetooth system /proc/bluetooth/sleep/proto
+        chown bluetooth system /proc/bluetooth/sleep/btwrite
+    chown bluetooth shell /productinfo/connectivity_configure.ini
+    chown bluetooth bluetooth /system/etc/connectivity_configure.ini
+#for wifi
+    chmod 666 /productinfo/connectivity_configure.ini
+    chmod 666 /system/etc/connectivity_configure.ini
 
-    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 100000
+# Broadcom GPS
+    chown root system /dev/ttyS3
+    chmod 0660 /dev/ttyS3
+    chown root system /sys/class/sec/gps/GPS_PWR_EN/value
+    chmod 0664 /sys/class/sec/gps/GPS_PWR_EN/value
 
-service hfag /system/bin/sdptool add --channel=10 HFAG
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
+# make sure data_system dir and perms are properly set.
+    mkdir /data/system 0771 system system
+    chown system system /data/system
+    mkdir /data/system/gps 0771 system system
+    chown system system /data/system/gps
 
-service hsag /system/bin/sdptool add --channel=11 HSAG
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
+# delete gps Factory file
+    rm /data/gps_started
+    rm /data/glonass_started
+    rm /data/smd_started
+    rm /data/sv_cno.info
 
-service opush /system/bin/sdptool add --channel=12 OPUSH
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
+# OTG_TEST
+    chown system radio /sys/class/host_notify/usb_otg/booster
+    chmod 0660 /sys/class/host_notify/usb_otg/booster
 
-service pbap /system/bin/sdptool add --channel=19 PBAP
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
+#touchkey
+    chown system system /sys/class/sec/sec_touchkey/touchkey_back
+    chown system system /sys/class/sec/sec_touchkey/touchkey_recent
+    chown system system /sys/class/sec/sec_touchkey/touchkey_threshold
+    chown system system /sys/class/sec/sec_touchkey/touchkey_raw_recent
+    chown system system /sys/class/sec/sec_touchkey/touchkey_raw_back
+    chown system system /sys/class/sec/sec_touchkey/touchkey_firm_update
 
-#service hciattach /system/bin/hciattach -n /dev/sttybt0 sprd_shark
-#    socket bluetooth stream 660 bluetooth bluetooth
-#    user bluetooth
-#    group wifi bluetooth net_bt_admin net_bt inet net_raw net_admin system
-#    disabled
-#    oneshot
-
-service btld  /system/bin/btld -lpm 0 -hb 3000000
-    user root
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-
-service dhcpcd_bnep0 /system/bin/dhcpcd -ABKL
+# GPS
+service gpsd /system/bin/gpsd -c /system/etc/gps.xml
     class main
-    disabled
-    oneshot
+    user gps
+    group system inet net_raw
+    ioprio be 0
 
-service iprenew_bnep0 /system/bin/dhcpcd -n
-    class main
-    disabled
-    oneshot
+service temp_test /data/simpletest
+	class core
+	disabled
+	oneshot
 
-service dhcpcd_bt-pan /system/bin/dhcpcd -BKLG
-   disabled
-   oneshot
+on property:persist.sys.temp.test=1
+	start temp_test
 
 
 service iprenew_bt-pan /system/bin/dhcpcd -n
     disabled
     oneshot
-
-service engpcclientw /system/bin/engpc -p w -a /dev/ttyGS0 -d /dev/ttyGS1
+service phoneserver_l /system/bin/phoneserver -m l
     class core
-    user system
-    group system radio shell sdcard_rw
+    user root
+    group radio system shell
     disabled
     oneshot
 
-# set LMK watermark as {14M,20M,24M,32M,38M,48M}
-on property:sys.boot_completed=1
-    write /sys/module/lowmemorykiller/parameters/adj 0,1,3,5,9,15
-    write /sys/module/lowmemorykiller/parameters/minfree 3584,5120,6144,8192,9728,12288
-    
-service engpcclientwcn /system/bin/engpc -p wcn -a /dev/ttyGS2 -d /dev/ttyGS3
-    class core
-    user system
-    group system radio shell
-    disabled
-    oneshot
+#lte rild service
+#service lril-daemon /system/bin/rild_sp -l /system/lib/libreference-ril_sp.so -m l -n 0
+#    class core
+#    socket lrild stream 660 root radio
+#    socket lrild-debug stream 660 radio system
+#    disabled
+#    user root
+#    group radio cache inet misc audio sdcard_rw log shell
+#
+#service lril-daemon1 /system/bin/rild_sp -l /system/lib/libreference-ril_sp.so -m l -n 1
+#    class core
+#    socket lrild1 stream 660 root radio
+#    socket lrild-debug1 stream 660 radio system
+#    disabled
+#    user root
+#    group radio cache inet misc audio sdcard_rw log shell
+on post-fs
+#   insmod /system/lib/modules/bcmdhd.ko
 
-service wcnd /system/bin/wcnd
-    class core
-    #   we will start as root and wcnd will switch to user system
-    #   user system
-    group system shell wifi inet net_bt_stack
-    oneshot
+# set LMK watermark as {12M,16M,18M,26M,34M,42M}
+on property:lmk.autocalc=false
+    write /sys/module/lowmemorykiller/parameters/adj 0,1,3,9,11,15
+    write /sys/module/lowmemorykiller/parameters/minfree 3072,4096,4608,6656,8704,10752
+    setprop sys.lmk.adj "0,1,3,9,11,15"
+    setprop sys.lmk.minfree "3072,4096,4608,6656,8704,10752"
 
-service wcnd_eng /system/bin/wcnd -G
+# chown for engineermode
+chown system system /sys/module/smsg/parameters/assert_trigger
+chown system system /sys/power/avs_log
+
+# SSWAP
+service swapon /sbin/sswap -s
     class core
-    group system shell wifi inet net_bt_stack
-    disabled
+    user root
+    group root
     oneshot

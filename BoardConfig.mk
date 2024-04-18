@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Inherit from the proprietary version
--include vendor/samsung/grandprimeve3g/BoardConfigVendor.mk
+-include vendor/samsung/j3xnlte/BoardConfigVendor.mk
 
 # Platform
 TARGET_ARCH := arm
@@ -25,18 +25,16 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a7
 TARGET_CPU_SMP := true
 ARCH_ARM_HAVE_TLS_REGISTER := true
-TARGET_BOOTLOADER_BOARD_NAME := SC7730SE
-TARGET_GLOBAL_CFLAGS += -mtune=cortex-a7 -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a7 -mfpu=neon -mfloat-abi=softfp
+TARGET_BOOTLOADER_BOARD_NAME := SC9830I
 BOARD_VENDOR := samsung
 
 # Config u-boot
 TARGET_NO_BOOTLOADER := true
 
-BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1572864000
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 5872025600
+BOARD_BOOTIMAGE_PARTITION_SIZE := 20971520
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 20971520
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 5272240128
 BOARD_CACHEIMAGE_PARTITION_SIZE := 209715200
 BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -46,32 +44,48 @@ BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_CMDLINE := console=ttyS1,115200n8
 BOARD_KERNEL_PAGESIZE := 2048
-TARGET_KERNEL_CONFIG := cyanogen_grandprimeve3g_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/grandprimeve3g
-BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --dt device/samsung/grandprimeve3g/dt.img
+TARGET_KERNEL_CONFIG := j3xnlte_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/j3xnlte
+NEED_KERNEL_MODULE_ROOT := true
+BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --dt device/samsung/j3xnlte/dt.img
+
+SPRD_MODULES:
+	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=$(KERNEL_OUT) clean
+	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=$(KERNEL_OUT)
+	mv vendor/sprd/modules/libgpu/gpu/utgard/mali.ko $(KERNEL_MODULES_OUT)
+	make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=$(KERNEL_OUT) clean
+	make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=$(KERNEL_OUT)
+	mv vendor/sprd/wcn/wifi/sc2331/5.1/sprdwl.ko $(KERNEL_MODULES_OUT)
+	mkdir -p $(PRODUCT_OUT)/system/lib/modules
+	ln -sf /lib/modules/autotst.ko $(PRODUCT_OUT)/system/lib/modules/autotst.ko
+	ln -sf /lib/modules/mali.ko $(PRODUCT_OUT)/system/lib/modules/mali.ko
+	ln -sf /lib/modules/mmc_test.ko $(PRODUCT_OUT)/system/lib/modules/mmc_test.ko
+	ln -sf /lib/modules/sprdwl.ko $(PRODUCT_OUT)/system/lib/modules/sprdwl.ko
+
+TARGET_KERNEL_MODULES := SPRD_MODULES
 
 # RIL
-BOARD_RIL_CLASS := ../../../device/samsung/grandprimeve3g/ril
+BOARD_RIL_CLASS := device/samsung/j3xnlte/ril
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/grandprimeve3g/bluetooth
-BOARD_BLUEDROID_VENDOR_CONF := device/samsung/grandprimeve3g/bluetooth/libbt_vndcfg.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/j3xnlte/bluetooth
+BOARD_BLUEDROID_VENDOR_CONF := device/samsung/j3xnlte/bluetooth/libbt_vndcfg.txt
 
 # Wifi
-BOARD_WLAN_DEVICE := bcmdhd
-BOARD_WLAN_DEVICE_REV := bcm4343
-WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
-BOARD_HOSTAPD_DRIVER := NL80211
-BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
-WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd/parameters/firmware_path"
-WIFI_DRIVER_FW_PATH_STA := "/system/etc/wifi/bcmdhd_sta.bin"
-WIFI_DRIVER_FW_PATH_AP := "/system/etc/wifi/bcmdhd_apsta.bin"
-WIFI_DRIVER_NVRAM_PATH_PARAM := "/sys/module/dhd/parameters/nvram_path"
-WIFI_DRIVER_NVRAM_PATH := "/system/etc/wifi/nvram_net.txt"
+WPA_SUPPLICANT_VERSION     := VER_2_1_DEVEL
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_sprdwl
+BOARD_HOSTAPD_DRIVER        := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_sprdwl
+BOARD_WLAN_DEVICE           := sc2341
+WIFI_DRIVER_FW_PATH_PARAM   := "/data/misc/wifi/fwpath"
+WIFI_DRIVER_FW_PATH_STA     := "sta_mode"
+WIFI_DRIVER_FW_PATH_P2P     := "p2p_mode"
+WIFI_DRIVER_FW_PATH_AP      := "ap_mode"
+WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/sprdwl.ko"
+WIFI_DRIVER_MODULE_NAME     := "sprdwl"
 WIFI_BAND := 802_11_ABG
 BOARD_HAVE_SAMSUNG_WIFI := true
 
@@ -86,8 +100,8 @@ COMMON_GLOBAL_CFLAGS += -DSC8830_HWC
 EXTENDED_FONT_FOOTPRINT := true
 
 # Resolution
-TARGET_SCREEN_HEIGHT := 960
-TARGET_SCREEN_WIDTH := 540
+TARGET_SCREEN_HEIGHT := 1280
+TARGET_SCREEN_WIDTH := 720
 
 # Audio
 BOARD_USES_TINYALSA_AUDIO := true
@@ -111,7 +125,7 @@ BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := SM-G531H,SM-G531BT,grandprimeve3g,grandprimeve3gdtv,grandprimeve3gub,grandprimeve3gxx,grandprimeve3gdtvvj
+TARGET_OTA_ASSERT_DEVICE := SM-J320FN,SM-J320F,SM-J210F,j3xnltexx,j3xnlte,j2xlte,j3xltexx,j3xlte
 
 # Use dmalloc() for such low memory devices like us
 MALLOC_IMPL := dlmalloc
@@ -132,29 +146,16 @@ BOARD_BATTERY_DEVICE_NAME := "battery"
 BACKLIGHT_PATH := /sys/class/backlight/panel/brightness
 
 # CMHW
-BOARD_HARDWARE_CLASS := device/samsung/grandprimeve3g/cmhw/
+BOARD_HARDWARE_CLASS := device/samsung/j3xnlte/cmhw/
 
 # TWRP
-##RECOVERY_VARIANT := twrp
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
-SP1_NAME := "internal_sd"
-SP1_BACKUP_METHOD := files
-SP1_MOUNTABLE := 1
-TW_INTERNAL_STORAGE_PATH := "/data/media/0"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
-TW_EXTERNAL_STORAGE_PATH := "/external_sd"
-TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
-TW_DEFAULT_EXTERNAL_STORAGE := true
-TW_FLASH_FROM_STORAGE := true
 TW_NO_REBOOT_BOOTLOADER := true
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/devices/platform/sec-thermistor/temperature"
-TWHAVE_SELINUX := true
-TARGET_RECOVERY_INITRC := device/samsung/grandprimeve3g/etc/init.rc
-TARGET_RECOVERY_FSTAB := device/samsung/grandprimeve3g/ramdisk/fstab.sc8830
+TARGET_RECOVERY_FSTAB := device/samsung/j3xnlte/ramdisk/fstab.sc8830
 TW_HAS_DOWNLOAD_MODE := true
-DEVICE_RESOLUTION := 540x960
-TW_THEME := portrait_mdpi
-BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_10x18.h\"
+DEVICE_RESOLUTION := 720x1280
+TW_THEME := portrait_hdpi
 
 # UMS
 BOARD_UMS_LUNFILE := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file"
