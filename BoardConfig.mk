@@ -46,23 +46,23 @@ BOARD_KERNEL_CMDLINE := console=ttyS1,115200n8
 BOARD_KERNEL_PAGESIZE := 2048
 TARGET_KERNEL_CONFIG := j3xnlte_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/j3xnlte
-NEED_KERNEL_MODULE_ROOT := true
+#NEED_KERNEL_MODULE_ROOT := true
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --dt device/samsung/j3xnlte/dt.img
 
-SPRD_MODULES:
-	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=$(KERNEL_OUT) clean
-	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=$(KERNEL_OUT)
-	mv vendor/sprd/modules/libgpu/gpu/utgard/mali.ko $(KERNEL_MODULES_OUT)
-	make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=$(KERNEL_OUT) clean
-	make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=$(KERNEL_OUT)
-	mv vendor/sprd/wcn/wifi/sc2331/5.1/sprdwl.ko $(KERNEL_MODULES_OUT)
-	mkdir -p $(PRODUCT_OUT)/system/lib/modules
-	ln -sf /lib/modules/autotst.ko $(PRODUCT_OUT)/system/lib/modules/autotst.ko
-	ln -sf /lib/modules/mali.ko $(PRODUCT_OUT)/system/lib/modules/mali.ko
-	ln -sf /lib/modules/mmc_test.ko $(PRODUCT_OUT)/system/lib/modules/mmc_test.ko
-	ln -sf /lib/modules/sprdwl.ko $(PRODUCT_OUT)/system/lib/modules/sprdwl.ko
-
-TARGET_KERNEL_MODULES := SPRD_MODULES
+# SPRD_MODULES:
+#	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=$(KERNEL_OUT) clean
+#	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=$(KERNEL_OUT)
+#	mv vendor/sprd/modules/libgpu/gpu/utgard/mali.ko $(KERNEL_MODULES_OUT)
+#	make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=$(KERNEL_OUT) clean
+#	make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=$(KERNEL_OUT)
+#	mv vendor/sprd/wcn/wifi/sc2331/5.1/sprdwl.ko $(KERNEL_MODULES_OUT)
+#	mkdir -p $(PRODUCT_OUT)/system/lib/modules
+#	ln -sf /lib/modules/autotst.ko $(PRODUCT_OUT)/system/lib/modules/autotst.ko
+#	ln -sf /lib/modules/mali.ko $(PRODUCT_OUT)/system/lib/modules/mali.ko
+#	ln -sf /lib/modules/mmc_test.ko $(PRODUCT_OUT)/system/lib/modules/mmc_test.ko
+#	ln -sf /lib/modules/sprdwl.ko $(PRODUCT_OUT)/system/lib/modules/sprdwl.ko
+#
+#TARGET_KERNEL_MODULES := SPRD_MODULES
 
 # RIL
 BOARD_RIL_CLASS := device/samsung/j3xnlte/ril
