@@ -65,7 +65,7 @@ BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 -
 #TARGET_KERNEL_MODULES := SPRD_MODULES
 
 # RIL
-BOARD_RIL_CLASS := device/samsung/j3xnlte/ril
+BOARD_RIL_CLASS := ../../device/samsung/j3xnlte/ril
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
@@ -75,10 +75,8 @@ BOARD_BLUEDROID_VENDOR_CONF := device/samsung/j3xnlte/bluetooth/libbt_vndcfg.txt
 
 # Wifi
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
-WPA_SUPPLICANT_VERSION     := VER_2_1_DEVEL
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_sprdwl
+WPA_SUPPLICANT_VERSION      := VER_2_1_DEVEL
 BOARD_HOSTAPD_DRIVER        := NL80211
-BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_sprdwl
 BOARD_WLAN_DEVICE           := sc2341
 WIFI_DRIVER_FW_PATH_PARAM   := "/data/misc/wifi/fwpath"
 WIFI_DRIVER_FW_PATH_STA     := "sta_mode"
