@@ -30,11 +30,13 @@ jobs:
         sudo tar xvzf openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz 
         export JAVA_HOME=/usr/local/java/java-se-7u75-ri/
         export JRE_HOME=/usr/local/java/java-se-7u75-ri/
-        export PATH=$PATH:$JRE_HOME/bin:$JAVA_HOME/bin
+        export PATH=$PATH:/usr/local/java/java-se-7u75-ri/bin:/usr/local/java/java-se-7u75-ri/bin
         sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/java-se-7u75-ri/bin/java" 1
         sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/java-se-7u75-ri/bin/javac" 1
+        sudo update-alternatives --install "/usr/bin/jar" "jar" "/usr/local/java/java-se-7u75-ri/bin/jar" 1
         sudo update-alternatives --set java /usr/local/java/java-se-7u75-ri/bin/java
         sudo update-alternatives --set javac /usr/local/java/java-se-7u75-ri/bin/javac
+        sudo update-alternatives --set jar /usr/local/java/java-se-7u75-ri/bin/jar
         java -version
     - name: Syncing CyanogenMod sources
       run: |
