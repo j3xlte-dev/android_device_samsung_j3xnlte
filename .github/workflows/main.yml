@@ -27,15 +27,15 @@ jobs:
         sudo cp -r openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz /usr/local/java/
         cd /usr/local/java
         sudo tar xvzf openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz 
-        export JAVA_HOME=/usr/local/java/jdk1.7.0_80
-        export JRE_HOME=/usr/local/java/jdk1.7.0_80
+        export JAVA_HOME=/usr/local/java/java-se-7u75-ri/
+        export JRE_HOME=/usr/local/java/java-se-7u75-ri/
         export PATH=$PATH:$JRE_HOME/bin:$JAVA_HOME/bin
-        sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jdk1.7.0_80/bin/java" 1
-        sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/jdk1.7.0_80/bin/javac" 1
-        sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jdk1.7.0_80/bin/javaws" 1
-        sudo update-alternatives --set java /usr/local/java/jdk1.7.0_80/bin/java
-        sudo update-alternatives --set javac /usr/local/java/jdk1.7.0_80/bin/javac
-        sudo update-alternatives --set javaws /usr/local/java/jdk1.7.0_80/bin/javaws
+        sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/java-se-7u75-ri/bin/java" 1
+        sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/java-se-7u75-ri/bin/javac" 1
+        sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/java-se-7u75-ri/bin/javaws" 1
+        sudo update-alternatives --set java /usr/local/java/java-se-7u75-ri/bin/java
+        sudo update-alternatives --set javac /usr/local/java/java-se-7u75-ri/bin/javac
+        sudo update-alternatives --set javaws /usr/local/java/java-se-7u75-ri/bin/javaws
     - name: Syncing CyanogenMod sources
       run: |
         mkdir ~/TWRP
