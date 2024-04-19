@@ -32,10 +32,9 @@ jobs:
         export PATH=$PATH:$JRE_HOME/bin:$JAVA_HOME/bin
         sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/java-se-7u75-ri/bin/java" 1
         sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/java-se-7u75-ri/bin/javac" 1
-        sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/java-se-7u75-ri/bin/javaws" 1
         sudo update-alternatives --set java /usr/local/java/java-se-7u75-ri/bin/java
         sudo update-alternatives --set javac /usr/local/java/java-se-7u75-ri/bin/javac
-        sudo update-alternatives --set javaws /usr/local/java/java-se-7u75-ri/bin/javaws
+        java -version
     - name: Syncing CyanogenMod sources
       run: |
         mkdir ~/TWRP
