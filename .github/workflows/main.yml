@@ -54,16 +54,18 @@ jobs:
         export JAVA_HOME="$HOME/.jdk_7/java-se-7u75-ri"
         cd ~/TWRP
         rm -rf ~/TWRP/build
-        git clone https://github.com/djeman/android_vendor_sprd/ -b ~/TWRP/vendor/sprd
+        git clone https://github.com/djeman/android_vendor_sprd/ -b cm-13.0 ~/TWRP/vendor/sprd
         git clone https://github.com/NotNoelChannel/android_build -b cm-12.1 ~/TWRP/build
-        git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/ -b android-5.1.1_r38 /opt/toolchain/aarch64-linux-android-4.9
+        git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 -b android-5.1.1_r10 /opt/toolchain/arm-eabi-4.8
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         export LC_ALL=C
+        export ARCH=arm
+        export CROSS_COMPILE=/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-
         lunch cm_j3xnlte-eng
         make -j$(nproc --all) otapackage
-    - name: Uploading TWRP builds
+    - name: Uploading CyanogenMod builds
       uses: actions/upload-artifact@v2
       with:
-        name: twrp
+        name: cyanogen
         path: /home/runner/TWRP/out/target/product/j3xnlte/*.zip
