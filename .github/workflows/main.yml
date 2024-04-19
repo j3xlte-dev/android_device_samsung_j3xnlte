@@ -55,7 +55,6 @@ jobs:
         export JAVA_HOME="$HOME/.jdk_7/java-se-7u75-ri"
         cd ~/TWRP
         rm -rf ~/TWRP/build
-        git clone https://github.com/djeman/android_vendor_sprd/ -b cm-13.0 ~/TWRP/vendor/sprd
         git clone https://github.com/NotNoelChannel/android_build -b cm-12.1 ~/TWRP/build
         git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 -b android-5.1.1_r10 /opt/toolchain/arm-eabi-4.8
         source build/envsetup.sh
