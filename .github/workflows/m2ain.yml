@@ -1,0 +1,34 @@
+name: CyanogenMod CI
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: TWRP Build CI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Cloning the kernel
+      run: |
+        mkdir ~/TWRP
+        git clone https://github.com/phoenix-wnd/android_kernel_samsung_j3xnlte -b cm-13.0 ~/TWRP/kernel/samsung/j3xnlte
+        git clone https://github.com/djeman/android_vendor_sprd/ -b cm-13.0 ~/TWRP/vendor/sprd
+    - name: Installing Build Dependencies
+      run: |
+        cd ~/TWRP
+        mkdir modules
+        make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=/TWRP/kernel/samsung/j3xnlte clean
+	      make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=kernel/samsung/j3xnlte
+        mv vendor/sprd/modules/libgpu/gpu/utgard/mali.ko ~/TWRP/modules
+	      make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=kernel/samsung/sharkls clean
+	      make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=kernel/samsung/sharkls
+	      mv vendor/sprd/wcn/wifi/sc2331/5.1/sprdwl.ko ~/TWRP/modules
+    - name: Uploading modules
+      uses: actions/upload-artifact@v2
+      with:
+        name: modules
+        path: /home/runner/TWRP/modules/*.ko
