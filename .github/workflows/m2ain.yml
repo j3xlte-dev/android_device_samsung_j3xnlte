@@ -22,11 +22,11 @@ jobs:
         cd ~/TWRP
         mkdir modules
         make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=/TWRP/kernel/samsung/j3xnlte clean
-	      make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=kernel/samsung/j3xnlte
+	make -C vendor/sprd/modules/libgpu/gpu/utgard/ MALI_PLATFORM=sc8830 BUILD=debug KDIR=kernel/samsung/j3xnlte
         mv vendor/sprd/modules/libgpu/gpu/utgard/mali.ko ~/TWRP/modules
-	      make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=kernel/samsung/sharkls clean
-	      make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=kernel/samsung/sharkls
-	      mv vendor/sprd/wcn/wifi/sc2331/5.1/sprdwl.ko ~/TWRP/modules
+        make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=kernel/samsung/sharkls clean
+        make -C vendor/sprd/wcn/wifi/sc2331/5.1/ SPRDWL_PLATFORM=sc8830 USING_PP_CORE=2 BUILD=debug KDIR=kernel/samsung/sharkls
+	mv vendor/sprd/wcn/wifi/sc2331/5.1/sprdwl.ko ~/TWRP/modules
     - name: Uploading modules
       uses: actions/upload-artifact@v2
       with:
