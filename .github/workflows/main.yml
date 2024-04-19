@@ -61,7 +61,7 @@ jobs:
         export ALLOW_MISSING_DEPENDENCIES=true
         export LC_ALL=C
         export ARCH=arm
-        export CROSS_COMPILE=/opt/toolchains/arm-eabi-4.8/bin/arm-eabi-
+        export CROSS_COMPILE=/opt/toolchain/arm-eabi-4.8/bin/arm-eabi-
         lunch cm_j3xnlte-eng
         make -j$(nproc --all) otapackage
     - name: Uploading CyanogenMod builds
