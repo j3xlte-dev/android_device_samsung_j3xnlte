@@ -1,0 +1,90 @@
+name: CyanogenMod Recovery CI
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: TWRP Build CI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Cleanup
+      uses: rokibhasansagar/slimhub_actions@main
+      
+    - name: Installing Build Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install bc axel bison build-essential ccache curl flex g++-multilib gcc-multilib python python2 git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+        python -V
+    - name: Installing OpenJDK 7
+      run: |
+        axel -q -n $(nproc --all) https://download.java.net/openjdk/jdk7u75/ri/openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz
+        sudo mkdir -p /usr/local/java
+        sudo cp -r openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz /usr/local/java/
+        cd /usr/local/java
+        sudo tar xvzf openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz 
+        export JAVA_HOME=/usr/local/java/java-se-7u75-ri/
+        export JRE_HOME=/usr/local/java/java-se-7u75-ri/
+        export PATH=$PATH:/usr/local/java/java-se-7u75-ri/bin:/usr/local/java/java-se-7u75-ri/bin
+        sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/java-se-7u75-ri/bin/java" 1
+        sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/java-se-7u75-ri/bin/javac" 1
+        sudo update-alternatives --install "/usr/bin/jar" "jar" "/usr/local/java/java-se-7u75-ri/bin/jar" 1
+        sudo update-alternatives --set java /usr/local/java/java-se-7u75-ri/bin/java
+        sudo update-alternatives --set javac /usr/local/java/java-se-7u75-ri/bin/javac
+        sudo update-alternatives --set jar /usr/local/java/java-se-7u75-ri/bin/jar
+        java -version
+    - name: Syncing CyanogenMod sources
+      run: |
+        mkdir ~/TWRP
+        cd ~/TWRP
+        mkdir ~/.bin
+        curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/.bin/repo
+        python3 ~/.bin/repo init --depth=1 -u https://github.com/CyanogenMod/android -b cm-12.1
+        git clone https://github.com/j3xlte-dev/android_device_samsung_j3xnlte -b cm-12.1 ~/TWRP/device/samsung/j3xnlte
+        git clone https://github.com/j3xlte-dev/android_vendor_samsung_j3xnlte -b cm-12.1 ~/TWRP/vendor/samsung/j3xnlte
+        git clone https://github.com/phoenix-wnd/android_kernel_samsung_j3xnlte -b cm-13.0 ~/TWRP/kernel/samsung/j3xnlte
+        python3 ~/.bin/repo sync -c --force-sync --optimized-fetch --no-tags --no-clone-bundle --prune -j$(nproc --all)
+    - name: Applying patches for CyanogenMod
+      run: |   
+        mv ~/TWRP/device/samsung/j3xnlte/patches/frameworks_av.diff ~/TWRP/frameworks/av
+        cd ~/TWRP/frameworks/av
+        patch -p1 < frameworks_av.diff
+        mv ~/TWRP/device/samsung/j3xnlte/patches/external_tinyalsa.diff ~/TWRP/external/tinyalsa
+        cd ~/TWRP/external/tinyalsa
+        patch -p1 < external_tinyalsa.diff
+        mv ~/TWRP/device/samsung/j3xnlte/patches/frameworks_base.diff ~/TWRP/frameworks/base
+        cd ~/TWRP/frameworks/base
+        patch -p1 < frameworks_base.diff
+        mv ~/TWRP/device/samsung/j3xnlte/patches/frameworks_native.diff ~/TWRP/frameworks/native
+        cd ~/TWRP/frameworks/native
+        patch -p1 < frameworks_native.diff
+        mv ~/TWRP/device/samsung/j3xnlte/patches/hardware_libhardware.diff ~/TWRP/hardware/libhardware
+        cd ~/TWRP/hardware/libhardware
+        patch -p1 < hardware_libhardware.diff
+    - name: Building CyanogenMod Recovery
+      run: |
+        OLDPATH=$PATH
+        OLDJAVAHOME=$JAVA_HOME
+        export PATH="$HOME/.jdk_7/java-se-7u75-ri/bin:$PATH"
+        export JAVA_HOME="$HOME/.jdk_7/java-se-7u75-ri"
+        cd ~/TWRP
+        rm -rf ~/TWRP/build
+        git clone https://github.com/NotNoelChannel/android_build -b cm-12.1 ~/TWRP/build
+        git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8 -b android-5.1.1_r10 /opt/toolchain/arm-eabi-4.8
+        source build/envsetup.sh
+        export ALLOW_MISSING_DEPENDENCIES=true
+        export LC_ALL=C
+        export ARCH=arm
+        export CROSS_COMPILE=/opt/toolchain/arm-eabi-4.8/bin/arm-eabi-
+        lunch cm_j3xnlte-eng
+        make -j$(nproc --all) recoveryimage
+    - name: Uploading CyanogenMod Recovery builds
+      uses: actions/upload-artifact@v2
+      with:
+        name: cyanogen
+        path: /home/runner/TWRP/out/target/product/j3xnlte/*.img
