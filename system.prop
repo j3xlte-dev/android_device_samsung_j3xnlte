@@ -1,9 +1,8 @@
-
-ro.sf.lcd_density=240
-ro.sf.lcd_width=154
-ro.sf.lcd_height=90
+ro.sf.lcd_density=320
+ro.sf.lcd_width=62
+ro.sf.lcd_height=111
 ro.opengles.version=131072
-ro.product.hardware=TSHARK2TABE_V1.0.0
+ro.product.hardware=SS_SHARKLS
 
 debug.hwui.render_dirty_regions=false
 
@@ -65,15 +64,13 @@ persist.sys.storage_preload=1
 
 # RIL
 ro.com.android.dataroaming=false
-ro.msms.phone_count=2
-persist.msms.phone_count=2
+ro.msms.phone_count=1
+persist.msms.phone_count=1
 persist.msms.phone_default=0
 persist.msmslt=0
-ro.modem.w.count=2
+ro.modem.w.count=1
 persist.sys.modem.diag=,gser
 sys.usb.gser.count=4
-ro.ril.hsxpa=1
-ro.ril.gprsclass=10
 persist.radio.multisim.config=dsds
 ro.telephony.ril_class=SamsungSPRDRIL
 persist.sys.sprd.modemreset=1

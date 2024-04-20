@@ -147,7 +147,7 @@ BACKLIGHT_PATH := /sys/class/backlight/panel/brightness
 BOARD_HARDWARE_CLASS := device/samsung/j3xnlte/cmhw/
 
 # TWRP
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
+RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
 TW_NO_REBOOT_BOOTLOADER := true
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/devices/platform/sec-thermistor/temperature"
 TARGET_RECOVERY_FSTAB := device/samsung/j3xnlte/ramdisk/fstab.sc8830
