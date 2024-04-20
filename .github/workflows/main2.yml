@@ -66,6 +66,12 @@ jobs:
         mv ~/TWRP/device/samsung/j3xnlte/patches/hardware_libhardware.diff ~/TWRP/hardware/libhardware
         cd ~/TWRP/hardware/libhardware
         patch -p1 < hardware_libhardware.diff
+        mv ~/TWRP/device/samsung/j3xnlte/patches/hardware_ril.diff ~/TWRP/hardware/ril
+        cd ~/TWRP/hardware/ril
+        patch -p1 < hardware_ril.diff
+        mv ~/TWRP/device/samsung/j3xnlte/patches/bootable_recovery.diff ~/TWRP/bootable/recovery
+        cd ~/TWRP/bootable/recovery
+        patch -p1 < bootable_recovery.diff
     - name: Building CyanogenMod Recovery
       run: |
         OLDPATH=$PATH
@@ -87,4 +93,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: cyanogen
-        path: /home/runner/TWRP/out/target/product/j3xnlte/*.img
+        path: /home/runner/TWRP/out/target/product/j3xnlte/recovery.*
