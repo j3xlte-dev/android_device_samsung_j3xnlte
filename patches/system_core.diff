@@ -992,7 +992,7 @@ index 80bdc2a..009379a 100644
 -    return ret;
  }
 
- int ion_sync_fd(int fd, int handle_fd)
+int ion_sync_fd(int fd, int handle_fd)
 diff --git a/libion/ion_test.c b/libion/ion_test.c
 index 8872282..0caaa2a 100644
 --- a/libion/ion_test.c
