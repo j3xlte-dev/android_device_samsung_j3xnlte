@@ -65,11 +65,13 @@ BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 -
 #TARGET_KERNEL_MODULES := SPRD_MODULES
 
 # RIL
-BOARD_RIL_CLASS := ../../device/samsung/j3xnlte/ril
+BOARD_RIL_CLASS := device/samsung/j3xnlte/ril
+BOARD_PROVIDES_LIBRIL := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_BCM := true
+SPRD_WCNBT_CHISET := marlin
+
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/j3xnlte/bluetooth
 BOARD_BLUEDROID_VENDOR_CONF := device/samsung/j3xnlte/bluetooth/libbt_vndcfg.txt
 
@@ -84,14 +86,16 @@ WIFI_DRIVER_FW_PATH_P2P     := "p2p_mode"
 WIFI_DRIVER_FW_PATH_AP      := "ap_mode"
 WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/sprdwl.ko"
 WIFI_DRIVER_MODULE_NAME     := "sprdwl"
-WIFI_BAND := 802_11_ABG
-BOARD_HAVE_SAMSUNG_WIFI := true
+WIFI_BAND	 				:= 802_11_ABG
+BOARD_HAVE_SAMSUNG_WIFI 	:= true
 
 # Hardware rendering
-BOARD_USE_MHEAP_SCREENSHOT := true
-TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
-HWUI_COMPILE_FOR_PERF := true
+TARGET_GPU_PP_CORE := 2
+USE_SPRD_HWCOMPOSER  := true
 USE_OPENGL_RENDERER := true
+USE_OVERLAY_COMPOSER_GPU := true
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 2
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 COMMON_GLOBAL_CFLAGS += -DSC8830_HWC
 
 # Include an expanded selection of fonts
@@ -119,7 +123,6 @@ TARGET_PROVIDES_INIT_RC := true
 
 # Recovery
 BOARD_HAS_NO_REAL_SDCARD := true
-BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 
 # Assert
@@ -149,7 +152,7 @@ BOARD_HARDWARE_CLASS := device/samsung/j3xnlte/cmhw/
 # TWRP
 RECOVERY_GRAPHICS_FORCE_SINGLE_BUFFER := true
 TW_NO_REBOOT_BOOTLOADER := true
-TW_CUSTOM_CPU_TEMP_PATH := "/sys/devices/platform/sec-thermistor/temperature"
+TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone1/temp"
 TARGET_RECOVERY_FSTAB := device/samsung/j3xnlte/ramdisk/fstab.sc8830
 TW_HAS_DOWNLOAD_MODE := true
 DEVICE_RESOLUTION := 720x1280
