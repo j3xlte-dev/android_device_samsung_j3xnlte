@@ -68,9 +68,6 @@ jobs:
         patch -p1 < hardware_libhardware.diff
         rm -rf ~/TWRP/bootable/recovery
         git clone https://github.com/omnirom/android_bootable_recovery -b android-5.1 ~/TWRP/bootable/recovery
-        mv ~/TWRP/device/samsung/j3xnlte/patches/bootable_recovery.diff ~/TWRP/bootable/recovery
-        cd ~/TWRP/bootable/recovery
-        patch -p1 < bootable_recovery.diff
         mv ~/TWRP/device/samsung/j3xnlte/patches/system_bt.diff ~/TWRP/system/bt
         cd ~/TWRP/system/bt
         patch -p1 < system_bt.diff
