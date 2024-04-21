@@ -13,10 +13,10 @@ index a8d0aa4..89a4254 100644
  ifneq ($(TARGET_RECOVERY_OVERSCAN_PERCENT),)
    LOCAL_CFLAGS += -DOVERSCAN_PERCENT=$(TARGET_RECOVERY_OVERSCAN_PERCENT)
  else
-diff --git a/minui/graphics_fbdev.cpp b/minui/graphics_fbdev.cpp
+diff --git a/minui/graphics_fbdev.c b/minui/graphics_fbdev.c
 index b017ff2..1f1a91f 100644
---- a/minui/graphics_fbdev.cpp
-+++ b/minui/graphics_fbdev.cpp
+--- a/minui/graphics_fbdev.c
++++ b/minui/graphics_fbdev.c
 @@ -143,6 +143,7 @@ static GRSurface* fbdev_init(minui_backend* backend) {
      memset(gr_framebuffer[0].data, 0, gr_framebuffer[0].height * gr_framebuffer[0].row_bytes);
  
