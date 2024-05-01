@@ -66,9 +66,6 @@ jobs:
         mv ~/TWRP/device/samsung/j3xnlte/patches/hardware_libhardware.diff ~/TWRP/hardware/libhardware
         cd ~/TWRP/hardware/libhardware
         patch -p1 < hardware_libhardware.diff
-        mv ~/TWRP/device/samsung/j3xnlte/patches/system_bt.diff ~/TWRP/system/bt
-        cd ~/TWRP/system/bt
-        patch -p1 < system_bt.diff
     - name: Building CyanogenMod Recovery
       run: |
         OLDPATH=$PATH
