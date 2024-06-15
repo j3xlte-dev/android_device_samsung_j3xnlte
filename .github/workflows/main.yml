@@ -23,6 +23,7 @@ jobs:
         python -V
     - name: Installing OpenJDK 7
       run: |
+        sudo apt install java-common libxi6 libxtst6
         wget https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-linux_amd64.deb
         sudo dpkg -i zulu7.56.0.11-ca-jdk7.0.352-linux_amd64.deb
     - name: Syncing CyanogenMod sources
