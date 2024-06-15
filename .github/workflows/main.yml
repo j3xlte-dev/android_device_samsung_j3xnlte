@@ -23,21 +23,8 @@ jobs:
         python -V
     - name: Installing OpenJDK 7
       run: |
-        axel -q -n $(nproc --all) https://download.java.net/openjdk/jdk7u75/ri/openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz
-        sudo mkdir -p /usr/local/java
-        sudo cp -r openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz /usr/local/java/
-        cd /usr/local/java
-        sudo tar xvzf openjdk-7u75-b13-linux-x64-18_dec_2014.tar.gz 
-        export JAVA_HOME=/usr/local/java/java-se-7u75-ri/
-        export JRE_HOME=/usr/local/java/java-se-7u75-ri/
-        export PATH=$PATH:/usr/local/java/java-se-7u75-ri/bin:/usr/local/java/java-se-7u75-ri/bin
-        sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/java-se-7u75-ri/bin/java" 1
-        sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/java-se-7u75-ri/bin/javac" 1
-        sudo update-alternatives --install "/usr/bin/jar" "jar" "/usr/local/java/java-se-7u75-ri/bin/jar" 1
-        sudo update-alternatives --set java /usr/local/java/java-se-7u75-ri/bin/java
-        sudo update-alternatives --set javac /usr/local/java/java-se-7u75-ri/bin/javac
-        sudo update-alternatives --set jar /usr/local/java/java-se-7u75-ri/bin/jar
-        java -version
+        wget https://cdn.azul.com/zulu/bin/zulu7.56.0.11-ca-jdk7.0.352-linux_amd64.deb
+        dpkg -i zulu7.56.0.11-ca-jdk7.0.352-linux_amd64.deb
     - name: Syncing CyanogenMod sources
       run: |
         mkdir ~/TWRP
