@@ -66,7 +66,6 @@ BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 -
 
 # RIL
 BOARD_RIL_CLASS := device/samsung/j3xnlte/ril
-BOARD_PROVIDES_LIBRIL := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
