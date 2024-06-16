@@ -61,18 +61,3 @@ index 3706e9b..a10fc25 100644
 +        quirks |= kNeedsFlushBeforeDisable;
 +    }
 +#endif
- 
- #ifdef ENABLE_AV_ENHANCEMENTS
-     quirks |= ExtendedCodec::getComponentQuirks(info);
-@@ -2509,9 +2516,11 @@ void OMXCodec::setNativeWindowColorFormat(OMX_COLOR_FORMATTYPE &eNativeColorForm
-     // Convert OpenMAX color format to native color format
-     switch (eNativeColorFormat) {
-         // In case of SAMSUNG color format
-+#ifndef SPRD_HARDWARE
-         case OMX_SEC_COLOR_FormatNV12TPhysicalAddress:
-             eNativeColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_CUSTOM_YCbCr_420_SP_TILED;
-             break;
-+#endif
-         case OMX_SEC_COLOR_FormatNV12Tiled:
-             eNativeColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED;
-             break;
